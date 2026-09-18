@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: darukaa-earth
+    runtime: python
+    buildCommand: python -m pip install -r requirements.txt && python scripts/ingest.py
+    startCommand: python -m streamlit run app.py --server.address 0.0.0.0 --server.port $PORT
+    envVars:
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_MODEL
+        value: gpt-4o-mini
+      - key: OPENAI_EMBEDDING_MODEL
+        value: text-embedding-3-small
