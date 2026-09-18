@@ -157,7 +157,7 @@ The interface handles empty questions, invalid JSON, missing API keys, an empty/
 
 ## Deploy on Render
 
-This repository includes `render.yaml` for a Render web-service deployment. Render is recommended for this project because its build command runs `python scripts/ingest.py` before Streamlit starts. This creates the ChromaDB knowledge base from the source documents during every deployment.
+This repository includes `render.yaml` for a Render web-service deployment. Render is recommended for this project because its build command runs `python scripts/ingest.py` before Streamlit starts. This creates the ChromaDB knowledge base from the source documents during every deployment. If a free Render instance restarts without local build artifacts, the app automatically rebuilds the index on the first analysis request.
 
 1. Push this repository to GitHub. Do not upload `.env`.
 2. In Render, select **New** → **Blueprint** and choose the repository. Render detects `render.yaml`.
@@ -165,7 +165,7 @@ This repository includes `render.yaml` for a Render web-service deployment. Rend
 4. Deploy. The included Blueprint explicitly selects Render's `free` web-service plan. Render installs the dependencies, generates `chroma_db/`, then starts Streamlit on its assigned port.
 5. Test the generated `https://<service-name>.onrender.com` URL with a demo question.
 
-No persistent disk is needed for this hackathon demo because the database is rebuilt from `knowledge/documents/` on every deployment. Keep the service awake before presenting if your chosen hosting plan sleeps after inactivity.
+No persistent disk is needed for this hackathon demo because the database is rebuilt from `knowledge/documents/` on every deployment or, if necessary, on the first request after a restart. The first such request can take longer. Keep the service awake before presenting if your chosen hosting plan sleeps after inactivity.
 
 ## Security and CI CD
 

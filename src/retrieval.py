@@ -8,10 +8,28 @@ ROOT = Path(__file__).resolve().parents[1]
 CHROMA_DIR = ROOT / "chroma_db"
 
 
+def ensure_knowledge_base() -> None:
+    """Create the local vector store when a cloud host starts without build artifacts.
+
+    Render's free instances have an ephemeral filesystem, so this fallback keeps
+    the deployed demo functional after a restart. It only runs when the store is
+    absent and uses the same documented ingestion pipeline as local setup.
+    """
+    if CHROMA_DIR.exists() and any(CHROMA_DIR.iterdir()):
+        return
+    try:
+        from scripts.ingest import main as ingest_knowledge
+        ingest_knowledge()
+    except Exception as exc:
+        raise RuntimeError(
+            "The scientific knowledge base could not be prepared. Verify that "
+            "OPENAI_API_KEY is configured in the deployment environment, then retry."
+        ) from exc
+
+
 def retrieve(query: str, k: int = 4) -> list[dict]:
     """Return actual Chroma matches, with provenance preserved for citations."""
-    if not CHROMA_DIR.exists() or not any(CHROMA_DIR.iterdir()):
-        raise RuntimeError("Knowledge base is empty. Run: python scripts/ingest.py")
+    ensure_knowledge_base()
     store = Chroma(persist_directory=str(CHROMA_DIR), embedding_function=get_embeddings())
     results = store.similarity_search_with_relevance_scores(query, k=k)
     if not results:
