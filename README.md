@@ -162,7 +162,7 @@ This repository includes `render.yaml` for a Render web-service deployment. Rend
 1. Push this repository to GitHub. Do not upload `.env`.
 2. In Render, select **New** → **Blueprint** and choose the repository. Render detects `render.yaml`.
 3. Enter `OPENAI_API_KEY` as a secret environment variable before deploying.
-4. Deploy. Render installs the dependencies, generates `chroma_db/`, then starts Streamlit on its assigned port.
+4. Deploy. The included Blueprint explicitly selects Render's `free` web-service plan. Render installs the dependencies, generates `chroma_db/`, then starts Streamlit on its assigned port.
 5. Test the generated `https://<service-name>.onrender.com` URL with a demo question.
 
 No persistent disk is needed for this hackathon demo because the database is rebuilt from `knowledge/documents/` on every deployment. Keep the service awake before presenting if your chosen hosting plan sleeps after inactivity.

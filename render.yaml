@@ -2,6 +2,7 @@ services:
   - type: web
     name: darukaa-earth
     runtime: python
+    plan: free
     buildCommand: python -m pip install -r requirements.txt && python scripts/ingest.py
     startCommand: python -m streamlit run app.py --server.address 0.0.0.0 --server.port $PORT
     envVars:
